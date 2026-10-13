@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Local environment and secrets
+.env
+.env.*
+Frontend/.env
+Frontend/.env.*
+
+# Local datasets and generated model artifacts
+data/*
+artifacts/*
+
+# Frontend dependencies and generated output
+Frontend/node_modules/
+Frontend/dist/
+Frontend/.vite/
+Frontend/coverage/
+Frontend/*.tsbuildinfo
+
+# Editors and operating systems
+.ipynb_checkpoints/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
