@@ -43,6 +43,26 @@ class CustomForecastApiTests(unittest.TestCase):
         app.bundle_attempted = self.original_bundle_attempted
         app.bundle_file_signature = self.original_bundle_file_signature
 
+    def test_home_endpoint_is_available_at_home_path(self) -> None:
+        with patch("app.get_bundle", return_value=None):
+            response = self.client.get("/home")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json(),
+            {"message": "Demand Forecasting API is running", "stores_available": 0},
+        )
+
+    def test_root_serves_frontend_when_built(self) -> None:
+        with TemporaryDirectory() as directory:
+            index_file = Path(directory) / "index.html"
+            index_file.write_text("<!doctype html><title>DemandStudio</title>")
+            with patch.object(app, "FRONTEND_DIST_DIR", Path(directory)):
+                response = self.client.get("/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("DemandStudio", response.text)
+
     @staticmethod
     def records(weeks: int, skip_week: int | None = None) -> list[dict[str, object]]:
         first_monday = pd.Timestamp("2020-01-06")

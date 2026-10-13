@@ -17,7 +17,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 export const api = {
   health: () => request<HealthResponse>('/health'),
-  home: () => request<HomeResponse>('/'),
+  home: () => request<HomeResponse>('/home'),
   stores: () => request<StoresResponse>('/stores'),
   customForecast: (payload: CustomForecastRequest) => request<CustomForecastResponse>('/forecast/custom', { method: 'POST', body: JSON.stringify(payload) }),
   baseUrl: BASE_URL,

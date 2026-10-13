@@ -56,6 +56,20 @@ Open the Vite URL printed in the terminal (usually `http://localhost:5173`). The
 
 The frontend defaults to the local `/api` proxy. If you need another API base URL, create `Frontend/.env.local` with `VITE_API_BASE_URL=<your-api-base-url>`. Never commit `.env.local` or put secrets in frontend `VITE_*` variables.
 
+## Deploy as one website
+
+The root `Dockerfile` builds the frontend and runs it alongside the FastAPI API in
+one service, so the dashboard and API share one public URL. To deploy on Render,
+create a **Web Service** from this GitHub repository, select **Docker** as the
+runtime, and leave the Dockerfile path as `./Dockerfile`. Render builds and starts
+the service from that file; no separate static site or API service is needed.
+The service's `/` path serves the dashboard, and `/health` checks the API.
+
+Forecasting from uploaded CSV files works without a saved model. To use the
+optional saved-model endpoints after deployment, generate
+`artifacts/demand_forecasting_bundle.joblib` from your own dataset and include it
+in the deployment image; datasets and model artifacts remain excluded from Git.
+
 ## Use your own data
 
 Upload a CSV from the dashboard. Alternatively, place a local training CSV in `data/` and set `DATA_FILE`, `DATE_COLUMN`, `DEMAND_COLUMN`, and the optional `GROUP_COLUMN` in the notebook's first code cell.

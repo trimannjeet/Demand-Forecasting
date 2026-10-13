@@ -8,6 +8,8 @@ import numpy as np
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 from sklearn.ensemble import RandomForestRegressor
 
@@ -25,6 +27,7 @@ from forecasting import (
 
 BASE_DIR = Path(__file__).resolve().parent
 MODEL_PATH = BASE_DIR / "artifacts" / "demand_forecasting_bundle.joblib"
+FRONTEND_DIST_DIR = BASE_DIR / "Frontend" / "dist"
 
 
 class HealthResponse(BaseModel):
@@ -280,7 +283,15 @@ app.add_middleware(
 )
 
 
-@app.get("/", response_model=HomeResponse)
+@app.get("/", response_model=HomeResponse, include_in_schema=False)
+def serve_frontend() -> HomeResponse | FileResponse:
+    index_file = FRONTEND_DIST_DIR / "index.html"
+    if index_file.is_file():
+        return FileResponse(index_file)
+    return home()
+
+
+@app.get("/home", response_model=HomeResponse)
 def home() -> HomeResponse:
     loaded_bundle = get_bundle()
     return HomeResponse(
@@ -585,4 +596,12 @@ def forecast_custom_dataset(
         groups_count=len(grouped_data),
         metrics=group_metrics,
         forecasts=forecast_points,
+    )
+
+
+if (FRONTEND_DIST_DIR / "assets").is_dir():
+    app.mount(
+        "/assets",
+        StaticFiles(directory=FRONTEND_DIST_DIR / "assets"),
+        name="frontend-assets",
     )
