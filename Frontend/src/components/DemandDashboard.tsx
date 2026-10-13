@@ -286,25 +286,26 @@ export default function DemandDashboard({
         <p>See how demand has changed and what may come next.</p>
       </div>
       <div className="dashboard-controls">
-        {groups.length > 1 && <label className="dashboard-filter">Choose store or group
+        {response && groups.length > 1 && <label className="dashboard-filter">Choose store or group
           <select value={activeGroup} onChange={event => setSelectedGroup(event.target.value)}>
             <option value="__all__">All groups combined</option>
             {groups.map(group => <option key={group} value={group}>{group}</option>)}
           </select>
         </label>}
-        <div className="grain-switch" role="group" aria-label="Chart time scale">
+        {response && <div className="grain-switch" role="group" aria-label="Chart time scale">
           {(['week', 'month', 'year'] as const).map(value =>
             <button key={value} className={grain === value ? 'selected' : ''} onClick={() => setGrain(value)}>
               {value === 'week' ? 'Weekly' : value === 'month' ? 'Monthly' : 'Yearly'}
             </button>,
           )}
-        </div>
+        </div>}
         <button className="button button-primary dashboard-generate" onClick={onGenerate} disabled={!canGenerate}>
           {loading ? 'Forecasting…' : response ? 'Update forecast' : 'Generate forecast'}
         </button>
       </div>
     </div>
 
+    {response ? <>
     <div className="comparison-cards">
       <article className="comparison-card">
         <span className="comparison-eyebrow">{response ? `Previous ${comparisons?.weeks ?? response.horizon_weeks} weeks` : 'Past demand'}</span>
@@ -520,6 +521,10 @@ export default function DemandDashboard({
       <p className="timeline-footnote">
         Showing the top {groupForecasts.length} stores by expected sales. Percentages are each store’s share of the total forecast.
       </p>
+    </div>}
+    </> : !loading && <div className="dashboard-pending" role="status">
+      <strong>Your forecast is ready to generate</strong>
+      <span>No charts or sales summaries will appear until the forecast finishes successfully.</span>
     </div>}
   </section>;
 }

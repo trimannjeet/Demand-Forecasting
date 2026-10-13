@@ -139,8 +139,11 @@ function App() {
     try {
       const records = rows.flatMap((row, index) => headers.some(header => (row[header] ?? '').trim() !== '') ? [Object.fromEntries(headers.map(header => [header, header === dateColumn ? validation.normalizedDates.get(index) ?? row[header] ?? '' : row[header] ?? '']))] : []);
       const response = await api.customForecast({ date_column: dateColumn, demand_column: demandColumn, group_column: groupColumn || null, horizon, records });
+      if (!response.forecasts.length) {
+        setApiError('No forecast was created. Please check your sales data and try again.');
+        return;
+      }
       setResult(response);
-      if (!response.forecasts.length) setApiError('No forecast was created. Please check your sales data and try again.');
     } catch (error) { setApiError(error instanceof ApiError ? error.message : 'Something went wrong while creating the forecast. Please try again.'); }
     finally { setLoading(false); }
   };

@@ -79,6 +79,9 @@
 .forecast-point{fill:#101824;stroke:#a2b4ff;stroke-width:2.5}
 .timeline-footnote{margin:10px 0 0;color:#a2afc1;font-size:12px;line-height:1.55}
 .dashboard-empty{display:grid;min-height:200px;place-items:center;color:#aab7c9;font-size:14px}
+.dashboard-pending{display:flex;min-height:160px;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:24px;text-align:center;border:1px dashed #344157;border-radius:12px;background:rgba(13,21,33,.55)}
+.dashboard-pending strong{color:#e7ebf4;font-size:15px}
+.dashboard-pending span{max-width:460px;color:#98a5ba;font-size:12px;line-height:1.6}
 .dashboard-bottom-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:14px;margin-top:14px}
 .period-table-wrap{overflow:auto;margin-top:13px}
 .period-table{width:100%;border-collapse:collapse;text-align:left;font-size:13px}
